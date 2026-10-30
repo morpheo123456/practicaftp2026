@@ -38,7 +38,7 @@ fail_check() {
 }
 
 # ------------------------------------------------------------------------------
-# LOGRO 1: Cortafuegos UFW y Red
+# LOGRO 1: Cortafuegos UFW y Red (Total: 15 pts)
 # ------------------------------------------------------------------------------
 echo -e "${YELLOW}--- [LOGRO 1] Comprobando Cortafuegos (UFW) y Puertos ---${NC}"
 
@@ -70,7 +70,7 @@ else
 fi
 
 # ------------------------------------------------------------------------------
-# LOGRO 2: Instalación y Estado del Servicio vsftpd
+# LOGRO 2: Instalación y Estado del Servicio vsftpd (Total: 10 pts)
 # ------------------------------------------------------------------------------
 echo -e "\n${YELLOW}--- [LOGRO 2] Verificando Instalación y Estado del Servicio vsftpd ---${NC}"
 
@@ -95,7 +95,7 @@ else
 fi
 
 # ------------------------------------------------------------------------------
-# LOGRO 3: Gestión de Identidades (Grupo ftpgroup y Usuario ftpuser)
+# LOGRO 3: Gestión de Identidades (Grupo ftpgroup y Usuario ftpuser) (Total: 15 pts)
 # ------------------------------------------------------------------------------
 echo -e "\n${YELLOW}--- [LOGRO 3] Comprobando Entidades POSIX (ftpgroup / ftpuser) ---${NC}"
 
@@ -118,7 +118,7 @@ else
 fi
 
 # ------------------------------------------------------------------------------
-# LOGRO 4: Enjaulado Defensivo (Chroot) y Permisos
+# LOGRO 4: Enjaulado Defensivo (Chroot) y Permisos (Total: 15 pts)
 # ------------------------------------------------------------------------------
 echo -e "\n${YELLOW}--- [LOGRO 4] Comprobando Chroot y Permisos en el Home ---${NC}"
 
@@ -152,7 +152,7 @@ else
 fi
 
 # ------------------------------------------------------------------------------
-# LOGRO 5: Cifrado SSL/TLS (FTPS) y Certificados
+# LOGRO 5: Cifrado SSL/TLS (FTPS) y Certificados (Total: 15 pts)
 # ------------------------------------------------------------------------------
 echo -e "\n${YELLOW}--- [LOGRO 5] Verificando Cifrado FTPS (SSL/TLS) ---${NC}"
 
@@ -176,7 +176,7 @@ else
 fi
 
 # ------------------------------------------------------------------------------
-# LOGRO 6: Puertos Pasivos y Reglas de Calidad de Servicio (QoS)
+# LOGRO 6: Puertos Pasivos y Reglas de Calidad de Servicio (QoS) (Total: 10 pts)
 # ------------------------------------------------------------------------------
 echo -e "\n${YELLOW}--- [LOGRO 6] Verificando Puertos Pasivos y Límites de Rendimiento ---${NC}"
 
@@ -204,27 +204,27 @@ else
 fi
 
 # ------------------------------------------------------------------------------
-# LOGRO 7: Subsistema SFTP Aislado en OpenSSH
+# LOGRO 7: Subsistema SFTP Aislado en OpenSSH (Total: 10 pts)
 # ------------------------------------------------------------------------------
 echo -e "\n${YELLOW}--- [LOGRO 7] Verificando Subsistema SFTP en OpenSSH (/etc/ssh/sshd_config) ---${NC}"
 
 SSHD_CONF="/etc/ssh/sshd_config"
 
 if grep -Eq "^\s*Subsystem\s+sftp\s+internal-sftp" "$SSHD_CONF"; then
-    pass_check 3 "Uso del subsistema internal-sftp activado."
+    pass_check 4 "Uso del subsistema internal-sftp activado."
 else
     fail_check "OpenSSH no utiliza internal-sftp."
 fi
 
 if grep -A 10 -i "Match Group ftpgroup" "$SSHD_CONF" | grep -q "ChrootDirectory" && \
    grep -A 10 -i "Match Group ftpgroup" "$SSHD_CONF" | grep -q "ForceCommand internal-sftp"; then
-    pass_check 5 "Regla 'Match Group ftpgroup' con ChrootDirectory y ForceCommand configurada."
+    pass_check 6 "Regla 'Match Group ftpgroup' con ChrootDirectory y ForceCommand configurada."
 else
     fail_check "No se encuentra el bloque Match Group ftpgroup correctamente configurado en sshd_config."
 fi
 
 # ------------------------------------------------------------------------------
-# LOGRO 8: Verificación y Auditoría de Fichero Subido
+# LOGRO 8: Verificación y Auditoría de Fichero Subido (Total: 10 pts)
 # ------------------------------------------------------------------------------
 echo -e "\n${YELLOW}--- [LOGRO 8] Comprobando Archivo de Auditoría Subido (audit.txt) ---${NC}"
 
@@ -234,7 +234,7 @@ if [ -f "$AUDIT_FILE" ]; then
     pass_check 5 "El archivo 'audit.txt' existe en la carpeta /uploads del usuario."
     AUDIT_OWNER=$(stat -c '%U' "$AUDIT_FILE")
     if [ "$AUDIT_OWNER" = "ftpuser" ]; then
-        pass_check 4 "El propietario de 'audit.txt' es 'ftpuser'."
+        pass_check 5 "El propietario de 'audit.txt' es 'ftpuser'."
     else
         fail_check "El archivo 'audit.txt' pertenece a $AUDIT_OWNER (debe pertenecer a ftpuser)."
     fi
